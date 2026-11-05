@@ -1,0 +1,55 @@
+---
+import { profile } from '../data/profile';
+const links = [
+  ['home', '#top'],
+  ['about', '#about'],
+  ['skills', '#skills'],
+  ['projects', '#projects'],
+  ['log', '#experience'],
+  ['shell', '#shell'],
+  ['contact', '#contact'],
+];
+---
+
+<header class="fixed inset-x-0 top-0 z-40 border-b border-line bg-bg/75 backdrop-blur-md">
+  <nav class="mx-auto flex h-12 max-w-6xl items-center gap-3 px-4 text-xs sm:px-8 sm:text-sm" aria-label="Main">
+    <a href="#top" class="shrink-0 font-bold text-accent glow" aria-label="Back to top">
+      {profile.handle}<span class="text-muted">@</span>dev
+    </a>
+    <ul class="flex min-w-0 flex-1 gap-1 overflow-x-auto [scrollbar-width:none]">
+      {
+        links.map(([label, href], i) => (
+          <li>
+            <a
+              href={href}
+              data-nav={href.slice(1)}
+              class="block rounded px-2 py-1 whitespace-nowrap text-muted hover:bg-line/50 hover:text-fg aria-[current=true]:bg-accent aria-[current=true]:text-bg"
+            >
+              <span class="opacity-60">{i}:</span>
+              {label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="flex shrink-0 items-center gap-1">
+      <button
+        id="theme-btn"
+        type="button"
+        class="rounded border border-line px-2 py-1 text-muted hover:border-accent hover:text-accent"
+        title="Cycle theme"
+        aria-label="Cycle color theme"
+      >
+        <span class="text-accent">●</span> <span id="theme-name" class="hidden sm:inline">green</span>
+      </button>
+      <button
+        id="crt-btn"
+        type="button"
+        class="hidden rounded border border-line px-2 py-1 text-muted hover:border-accent hover:text-accent sm:block"
+        title="Toggle CRT scanlines"
+        aria-pressed="false">crt</button
+      >
+      <time id="clock" class="hidden pl-2 text-muted tabular-nums md:block">--:--:--</time>
+    </div>
+  </nav>
+</header>

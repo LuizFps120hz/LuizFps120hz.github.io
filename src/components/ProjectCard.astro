@@ -1,0 +1,80 @@
+---
+import type { Project } from '../data/profile';
+import Icon from './Icon.astro';
+
+interface Props {
+  project: Project;
+  index: number;
+  big?: boolean;
+  hidden?: boolean;
+}
+const { project: p, index, big = false, hidden = false } = Astro.props;
+const tabIdx = hidden ? -1 : undefined;
+---
+
+<article
+  class:list={[
+    'window spot group flex shrink-0 flex-col transition-transform duration-300 hover:-translate-y-1 hover:border-accent/60',
+    big ? 'w-full' : 'w-[300px] sm:w-[340px]',
+  ]}
+>
+  <div class="window-bar justify-between">
+    <span class="flex items-center gap-2">
+      <span class="dot bg-err/80"></span><span class="dot bg-warn/80"></span><span class="dot bg-accent/80"></span>
+      <span class="ml-1">~/projects/{String(index + 1).padStart(2, '0')}</span>
+    </span>
+    {
+      typeof p.stars === 'number' && (
+        <span class="flex items-center gap-1 text-warn">
+          <Icon name="star" class="size-3.5" /> {p.stars}
+        </span>
+      )
+    }
+  </div>
+
+  <div class:list={['flex flex-1 flex-col', big ? 'p-6 sm:p-8' : 'p-5']}>
+    <div class="mb-3 flex items-center gap-2">
+      {p.featured && <span class="rounded bg-accent px-1.5 py-0.5 text-[10px] font-bold text-bg uppercase">featured</span>}
+      {p.status && <span class="rounded border border-warn/50 px-1.5 py-0.5 text-[10px] text-warn uppercase">{p.status}</span>}
+      {p.language && <span class="text-[11px] text-accent-2">{p.language}</span>}
+    </div>
+    <h3 class:list={['font-bold text-fg group-hover:text-accent', big ? 'text-2xl sm:text-3xl' : 'text-lg']}>
+      <span class="text-muted">./</span>{p.name}
+    </h3>
+    <p class:list={['mt-2 flex-1 leading-relaxed text-muted', big ? 'text-sm sm:text-base' : 'text-[13px]']}>{p.desc}</p>
+
+    <ul class="mt-4 flex flex-wrap gap-1.5">
+      {p.tags.map((t) => <li class="tag">{t}</li>)}
+    </ul>
+
+    <div class="mt-5 flex gap-4 border-t border-line pt-4 text-xs">
+      {
+        p.repo && (
+          <a
+            href={p.repo}
+            target="_blank"
+            rel="noopener noreferrer"
+            tabindex={tabIdx}
+            class="flex items-center gap-1.5 text-fg hover:text-accent"
+          >
+            <Icon name="github" class="size-3.5" /> source
+          </a>
+        )
+      }
+      {
+        p.demo && (
+          <a
+            href={p.demo}
+            target="_blank"
+            rel="noopener noreferrer"
+            tabindex={tabIdx}
+            class="flex items-center gap-1.5 text-fg hover:text-accent"
+          >
+            <Icon name="external" class="size-3.5" /> live
+          </a>
+        )
+      }
+      {!p.repo && !p.demo && <span class="text-muted">// coming soon</span>}
+    </div>
+  </div>
+</article>

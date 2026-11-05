@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import Stats from '../components/Stats.astro';
+import About from '../components/About.astro';
+import Skills from '../components/Skills.astro';
+import Projects from '../components/Projects.astro';
+import Experience from '../components/Experience.astro';
+import Shell from '../components/Shell.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+import { getProjects } from '../lib/github';
+import { profile, contacts, skills } from '../data/profile';
+
+const projects = await getProjects();
+const stars = projects.reduce((n, p) => n + (p.stars ?? 0), 0);
+
+// Data the interactive shell needs (serialized as JSON, never executed).
+const shellData = {
+  profile: { name: profile.name, role: profile.role, location: profile.location, tagline: profile.tagline, handle: profile.handle },
+  skills: skills.map((g) => ({ group: g.group, items: g.items.map((i) => i.name) })),
+  projects: projects.map((p) => ({ name: p.name, desc: p.desc, url: p.demo ?? p.repo ?? '' })),
+  socials: contacts.filter((c) => c.icon !== 'mail').map((c) => ({ label: c.label, href: c.href })),
+};
+---
+
+<Base>
+  <Nav />
+  <main id="main">
+    <Hero />
+    <Stats projectCount={projects.length} stars={stars} />
+    <About />
+    <Skills />
+    <Projects projects={projects} />
+    <Experience />
+    <Shell />
+    <Contact />
+  </main>
+  <Footer />
+  <script type="application/json" id="shell-data" set:html={JSON.stringify(shellData).replace(/</g, '\\u003c')} />
+  <script>
+    import '../scripts/main';
+  </script>
+</Base>

@@ -1,0 +1,52 @@
+---
+import type { Project } from '../data/profile';
+import { profile } from '../data/profile';
+import Section from './Section.astro';
+import ProjectCard from './ProjectCard.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  projects: Project[];
+}
+const { projects } = Astro.props;
+const featured = projects.filter((p) => p.featured).slice(0, 2);
+---
+
+<Section id="projects" index="03" cmd="./projects --list --loop" title="Projects" subtitle="Things I've built, broken and rebuilt. Hover the reel to pause it.">
+  {
+    featured.length > 0 && (
+      <div class="mb-12 grid gap-6 md:grid-cols-2">
+        {featured.map((p, i) => (
+          <div class={`reveal d-${i + 1} flex`}>
+            <ProjectCard project={p} index={i} big />
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  <div class="reveal">
+    <p class="mb-4 flex items-center justify-between text-xs text-muted">
+      <span><span class="text-accent">●</span> REC · all projects ({projects.length})</span>
+      <span class="hidden sm:inline">hover to pause · ← scroll →</span>
+    </p>
+    <!-- The track is rendered twice so the loop is seamless; the copy is hidden from assistive tech. -->
+    <div class="marquee -mx-5 py-2 sm:-mx-8" role="region" aria-label="All projects reel">
+      {
+        [0, 1].map((copy) => (
+          <div class="marquee-track" aria-hidden={copy === 1 ? 'true' : undefined}>
+            {projects.map((p, i) => (
+              <ProjectCard project={p} index={i} hidden={copy === 1} />
+            ))}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="reveal mt-10 text-center">
+    <a href={`https://github.com/${profile.githubUser}?tab=repositories`} target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
+      <Icon name="github" /> see everything on github <Icon name="arrow" />
+    </a>
+  </div>
+</Section>
