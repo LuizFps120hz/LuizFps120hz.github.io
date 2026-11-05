@@ -1,0 +1,18 @@
+---
+interface Props {
+  title: string;
+  class?: string;
+  bodyClass?: string;
+}
+const { title, class: cls = '', bodyClass = 'p-5 sm:p-6' } = Astro.props;
+---
+
+<div class:list={['window spot', cls]}>
+  <div class="window-bar">
+    <span class="dot bg-err/80"></span>
+    <span class="dot bg-warn/80"></span>
+    <span class="dot bg-accent/80"></span>
+    <span class="ml-2 truncate">{title}</span>
+  </div>
+  <div class={bodyClass}><slot /></div>
+</div>

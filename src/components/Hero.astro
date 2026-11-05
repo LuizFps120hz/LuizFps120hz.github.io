@@ -1,0 +1,95 @@
+---
+import { profile } from '../data/profile';
+import Icon from './Icon.astro';
+
+// ASCII banner ("ANSI Shadow" font). Regenerate for another name at https://patorjk.com/software/taag/
+const ascii = String.raw`██╗     ███████╗██████╗ ███████╗
+██║     ██╔════╝██╔══██╗██╔════╝
+██║     █████╗  ██████╔╝███████╗
+██║     ██╔══╝  ██╔═══╝ ╚════██║
+███████╗██║     ██║     ███████║
+╚══════╝╚═╝     ╚═╝     ╚══════╝`;
+
+const boot = [
+  ['ok', 'booting debian 13 · mounting /home/' + profile.handle],
+  ['ok', 'loading modules: python, linux, curiosity, caffeine'],
+  ['ok', 'starting homelab.service (docker · nginx · tailscale)'],
+  ['ok', 'network: online · trackers: 0 · cookies: 0'],
+  ['>>', `welcome, visitor. last login: ${new Date().toUTCString().slice(0, 16)}`],
+];
+---
+
+<section id="top" class="relative isolate flex min-h-[100dvh] items-center overflow-hidden pt-16">
+  <canvas id="rain" class="pointer-events-none absolute inset-0 -z-10 size-full opacity-[0.16]" aria-hidden="true"></canvas>
+  <div class="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-bg to-transparent" aria-hidden="true"></div>
+
+  <div class="mx-auto grid w-full max-w-6xl gap-10 px-5 sm:px-8 lg:grid-cols-[1.25fr_1fr] lg:items-center">
+    <div>
+      <ol class="mb-6 space-y-1 text-[11px] text-muted sm:text-xs" aria-label="Boot log">
+        {
+          boot.map(([s, msg]) => (
+            <li class="boot-line">
+              <span class={s === 'ok' ? 'text-accent' : 'text-accent-2'}>[{s === 'ok' ? '  OK  ' : ' INFO '}]</span> {msg}
+            </li>
+          ))
+        }
+      </ol>
+
+      <h1 class="sr-only">{profile.name} — {profile.role}</h1>
+      <pre
+        class="ascii mb-6 overflow-hidden text-[9px] leading-[1.15] font-bold sm:text-[13px] md:text-[15px]"
+        aria-hidden="true">{ascii}</pre>
+
+      <p class="fade-up late-1 text-lg text-fg sm:text-2xl">
+        <span class="text-muted">&gt;</span> <span id="typed" class="text-accent glow" data-words={profile.typedRoles.join('|')}>{profile.typedRoles[0]}</span><span class="cursor"
+        ></span>
+      </p>
+      <p class="fade-up late-2 mt-4 max-w-xl text-sm leading-relaxed text-muted sm:text-base">{profile.tagline}</p>
+
+      <div class="fade-up late-3 mt-8 flex flex-wrap gap-3">
+        <a href="#projects" class="btn btn-primary"><Icon name="code" /> ./view-projects</a>
+        <a href="#contact" class="btn btn-ghost"><Icon name="mail" /> contact --me</a>
+        <a href={`https://github.com/${profile.githubUser}`} class="btn btn-ghost" target="_blank" rel="noopener noreferrer">
+          <Icon name="github" /> github
+        </a>
+      </div>
+
+      <p class="fade-up late-4 mt-8 flex items-center gap-2 text-xs text-muted">
+        <span class="relative flex size-2.5">
+          <span class="absolute inline-flex size-full animate-ping rounded-full bg-accent opacity-75"></span>
+          <span class="relative inline-flex size-2.5 rounded-full bg-accent"></span>
+        </span>
+        {profile.status} · {profile.location}
+      </p>
+    </div>
+
+    <!-- Code card -->
+    <div class="fade-up late-2 hidden lg:block">
+      <div class="window box-glow spot">
+        <div class="window-bar">
+          <span class="dot bg-err/80"></span><span class="dot bg-warn/80"></span><span class="dot bg-accent/80"></span>
+          <span class="ml-2">~/dev/whoami.ts</span>
+        </div>
+        <pre class="overflow-x-auto p-5 text-[13px] leading-6"><code><span class="text-muted">01</span>  <span class="text-accent-2">const</span> <span class="text-fg">dev</span> = {'{'}
+<span class="text-muted">02</span>    name: <span class="text-warn">'{profile.name}'</span>,
+<span class="text-muted">03</span>    role: <span class="text-warn">'{profile.role}'</span>,
+<span class="text-muted">04</span>    based: <span class="text-warn">'{profile.location}'</span>,
+<span class="text-muted">05</span>    stack: [<span class="text-warn">'Python'</span>, <span class="text-warn">'JS'</span>, <span class="text-warn">'React'</span>, <span class="text-warn">'Node'</span>],
+<span class="text-muted">06</span>    os: <span class="text-warn">'Debian 13'</span>,
+<span class="text-muted">07</span>    learning: <span class="text-accent">true</span>,
+<span class="text-muted">08</span>  {'}'};
+<span class="text-muted">09</span>
+<span class="text-muted">10</span>  <span class="text-accent-2">await</span> <span class="text-accent">internship</span>(dev); <span class="text-muted">// 👀 remote ok</span></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <a
+    href="#about"
+    class="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-1 text-[10px] tracking-widest text-muted uppercase hover:text-accent sm:flex"
+    aria-label="Scroll to about section"
+  >
+    scroll
+    <span class="block h-8 w-px animate-pulse bg-gradient-to-b from-accent to-transparent"></span>
+  </a>
+</section>

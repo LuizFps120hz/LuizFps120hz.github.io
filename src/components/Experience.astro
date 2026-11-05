@@ -1,0 +1,38 @@
+---
+import { experience } from '../data/profile';
+import Section from './Section.astro';
+---
+
+<Section id="experience" index="04" cmd="git log --graph --oneline career" title="Experience" subtitle="The commit history so far.">
+  <ol class="relative ml-2 border-l border-dashed border-line sm:ml-4">
+    {
+      experience.map((j, i) => (
+        <li class={`reveal d-${Math.min(i + 1, 6)} relative pb-10 pl-8 last:pb-0 sm:pl-10`}>
+          <span
+            class:list={[
+              'absolute top-1 -left-[7px] size-3.5 rounded-full border-2',
+              i === 0 ? 'border-accent bg-accent shadow-[0_0_12px_var(--accent)]' : 'border-accent bg-bg',
+            ]}
+            aria-hidden="true"
+          />
+          <div class="window spot p-5 sm:p-6">
+            <p class="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+              <span class="text-warn">commit {j.hash}</span>
+              {i === 0 && <span class="text-accent-2">(HEAD -&gt; main)</span>}
+              <span class="text-muted">· {j.date}</span>
+            </p>
+            <h3 class="text-lg font-bold text-fg">
+              {j.title} <span class="font-normal text-muted">@ {j.org}</span>
+            </h3>
+            <p class="mt-2 text-sm leading-relaxed text-muted">{j.desc}</p>
+            <ul class="mt-3 flex flex-wrap gap-1.5">
+              {j.tags.map((t) => (
+                <li class="tag">#{t}</li>
+              ))}
+            </ul>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</Section>

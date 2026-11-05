@@ -1,0 +1,53 @@
+---
+import { skills, ticker } from '../data/profile';
+import Section from './Section.astro';
+import Window from './Window.astro';
+---
+
+<Section id="skills" index="02" cmd="ls -la ~/skills" title="Skills & stack" subtitle="Tools I reach for every day — and the ones I'm still leveling up.">
+  <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    {
+      skills.map((g, i) => (
+        <Window title={g.cmd} class={`reveal d-${i + 1}`}>
+          <p class="mb-4 text-xs text-muted">
+            total {g.items.length} <span class="text-accent-2">drwxr-xr-x</span> {g.group}/
+          </p>
+          <ul class="space-y-3.5">
+            {g.items.map((s) => (
+              <li>
+                <div class="mb-1.5 flex justify-between text-[13px]">
+                  <span class="text-fg">{s.name}</span>
+                  <span class="text-muted" aria-label={`level ${s.level} of 5`}>
+                    {'▮'.repeat(s.level)}
+                    <span class="opacity-30">{'▮'.repeat(5 - s.level)}</span>
+                  </span>
+                </div>
+                <div class="bar">
+                  <span class={`lvl-${s.level}`} />
+                </div>
+              </li>
+            ))}
+          </ul>
+        </Window>
+      ))
+    }
+  </div>
+
+  <div class="reveal mt-12 space-y-4" aria-label="Technologies">
+    {
+      [false, true].map((rev) => (
+        <div class:list={['marquee slow', { reverse: rev }]}>
+          {[0, 1].map((copy) => (
+            <ul class="marquee-track" aria-hidden={copy === 1 ? 'true' : undefined}>
+              {(rev ? [...ticker].reverse() : ticker).map((t) => (
+                <li class="rounded-md border border-line bg-panel/70 px-4 py-2 text-sm whitespace-nowrap text-muted">
+                  <span class="text-accent">$</span> {t}
+                </li>
+              ))}
+            </ul>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</Section>

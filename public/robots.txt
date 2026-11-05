@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://luizfps120hz.github.io/sitemap-index.xml

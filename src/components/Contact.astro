@@ -1,0 +1,82 @@
+---
+import { contacts } from '../data/profile';
+import Section from './Section.astro';
+import Window from './Window.astro';
+import Icon from './Icon.astro';
+
+// Email is split + reversed in the markup and rebuilt by JS, so naive scrapers don't harvest it.
+const encode = (s: string) => [...s].reverse().join('');
+const hasMail = contacts.some((c) => c.icon === 'mail');
+const primary = contacts[0];
+---
+
+<Section id="contact" index="06" cmd="contact --list" title="Get in touch" subtitle="Internship, project or just want to talk tech? My door is open.">
+  <div class="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+    <Window title="~/contact.sh" class="reveal">
+      <p class="mb-6 text-sm text-muted"><span class="prompt text-fg">echo $CONTACTS</span></p>
+      <ul class="space-y-3">
+        {
+          contacts.map((c) => {
+            const isMail = c.icon === 'mail';
+            const [user, domain] = c.value.split('@');
+            return (
+              <li class="group flex items-center gap-3 rounded-md border border-line bg-bg/40 p-3 transition-colors hover:border-accent">
+                <span class="grid size-10 shrink-0 place-items-center rounded border border-line text-accent group-hover:bg-accent group-hover:text-bg">
+                  <Icon name={c.icon} class="size-5" />
+                </span>
+                <div class="min-w-0 flex-1">
+                  <p class="text-[11px] text-muted uppercase">{c.label}</p>
+                  {isMail ? (
+                    <a class="email block truncate text-sm text-fg hover:text-accent" data-u={encode(user)} data-d={encode(domain ?? '')} href="#contact">
+                      {user} [at] {domain}
+                    </a>
+                  ) : (
+                    <a class="block truncate text-sm text-fg hover:text-accent" href={c.href} target="_blank" rel="noopener noreferrer me">
+                      {c.value}
+                    </a>
+                  )}
+                </div>
+                {isMail ? (
+                  <button
+                    type="button"
+                    class="copy-email flex items-center gap-1 rounded border border-line px-2 py-1 text-xs text-muted hover:border-accent hover:text-accent"
+                    aria-label="Copy email address"
+                  >
+                    <Icon name="copy" class="size-3.5" /> <span>copy</span>
+                  </button>
+                ) : (
+                  <Icon name="external" class="size-4 text-muted group-hover:text-accent" />
+                )}
+              </li>
+            );
+          })
+        }
+      </ul>
+      {contacts.length < 3 && <p class="mt-5 text-xs text-muted"><span class="text-accent">$</span> more channels coming soon…</p>}
+    </Window>
+
+    <div class="reveal d-2 window box-glow spot flex flex-col justify-between p-6 sm:p-8">
+      <div>
+        <p class="text-xs text-muted">// open to remote internships &amp; entry-level roles</p>
+        <h3 class="mt-4 text-3xl leading-tight font-bold text-fg sm:text-4xl">
+          Let's build<br /><span class="text-accent glow">something real</span><span class="cursor"></span>
+        </h3>
+        <p class="mt-4 text-sm leading-relaxed text-muted">
+          Hiring an intern, starting a project or just want to talk Linux, self-hosting or backend? Reach out — I'm always happy to learn
+          with good people.
+        </p>
+      </div>
+      {
+        hasMail ? (
+          <a class="email-cta btn btn-primary mt-8 justify-center" href="#contact">
+            <Icon name="mail" /> say_hello()
+          </a>
+        ) : (
+          <a class="btn btn-primary mt-8 justify-center" href={primary.href} target="_blank" rel="noopener noreferrer">
+            <Icon name={primary.icon} /> say_hello()
+          </a>
+        )
+      }
+    </div>
+  </div>
+</Section>

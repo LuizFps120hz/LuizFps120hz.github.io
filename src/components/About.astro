@@ -1,0 +1,64 @@
+---
+import { profile, skills } from '../data/profile';
+import Section from './Section.astro';
+import Window from './Window.astro';
+
+const fetchRows: [string, string][] = [
+  ['user', `${profile.handle}@portfolio`],
+  ['role', 'Dev student'],
+  ['edu', 'Systems Analysis & Dev'],
+  ['school', 'Facimp Wyden'],
+  ['os', 'Debian 13 (daily driver)'],
+  ['homelab', 'Docker · Nginx · Tailscale'],
+  ['langs', skills[0].items.map((s) => s.name).join(', ')],
+  ['learning', 'backend, databases, cloud'],
+  ['uptime', 'still learning, never idle'],
+  ['status', 'open to internships'],
+];
+const logo = String.raw`    .--.
+   |o_o |
+   |:_/ |
+  //   \ \
+ (|     | )
+/'\_   _/'\
+\___)=(___/`;
+const palette = ['bg-err', 'bg-warn', 'bg-accent', 'bg-accent-2', 'bg-fg', 'bg-muted'];
+---
+
+<Section id="about" index="01" cmd="cat about.md" title="About me" subtitle="A little bit about who I am and what drives me.">
+  <div class="grid gap-6 lg:grid-cols-[1.1fr_1fr]">
+    <Window title="about.md — less" class="reveal">
+      <div class="space-y-4 text-sm leading-7 text-fg/90 sm:text-[15px]">
+        {profile.about.map((p) => <p>{p}</p>)}
+      </div>
+      <div class="mt-6 border-t border-line pt-5">
+        <p class="mb-3 text-xs text-muted"><span class="prompt">grep -i "interests"</span></p>
+        <ul class="flex flex-wrap gap-2">
+          {profile.interests.map((i) => <li class="tag hover:border-accent hover:text-accent">{i}</li>)}
+        </ul>
+        <p class="mt-5 text-xs text-muted"><span class="text-accent-2">//</span> {profile.motto}</p>
+      </div>
+    </Window>
+
+    <Window title="neofetch" class="reveal d-2">
+      <div class="flex flex-col gap-6 sm:flex-row">
+        <pre class="text-xs leading-tight text-accent glow" aria-hidden="true">{logo}</pre>
+        <dl class="min-w-0 flex-1 space-y-1 text-[13px]">
+          <div class="mb-2 font-bold text-accent">{profile.handle}<span class="text-fg">@</span>portfolio</div>
+          <div class="mb-2 text-muted">--------------------</div>
+          {
+            fetchRows.map(([k, v]) => (
+              <div class="flex gap-2">
+                <dt class="w-20 shrink-0 font-semibold text-accent-2">{k}</dt>
+                <dd class="truncate text-fg/90">{v}</dd>
+              </div>
+            ))
+          }
+          <div class="flex gap-1 pt-3" aria-hidden="true">
+            {palette.map((c) => <span class={`h-4 w-6 ${c}`} />)}
+          </div>
+        </dl>
+      </div>
+    </Window>
+  </div>
+</Section>

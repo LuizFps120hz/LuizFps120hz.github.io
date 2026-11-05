@@ -1,0 +1,35 @@
+---
+import Section from './Section.astro';
+import { profile } from '../data/profile';
+---
+
+<Section id="shell" index="05" cmd="bash --interactive" title="Try the shell" subtitle="Type a command. Start with help — tab completes, ↑ ↓ walk history.">
+  <div class="reveal window box-glow">
+    <div class="window-bar">
+      <span class="dot bg-err/80"></span><span class="dot bg-warn/80"></span><span class="dot bg-accent/80"></span>
+      <span class="ml-2">{profile.handle}@portfolio: ~</span>
+    </div>
+    <div id="term" class="h-[360px] cursor-text overflow-y-auto p-5 text-[13px] leading-6 sm:text-sm" role="log" aria-live="polite" aria-label="Terminal output">
+      <div id="term-out">
+        <p class="text-muted">Welcome to lfps-sh v1.0 — type <span class="text-accent">help</span> to get started.</p>
+      </div>
+      <form id="term-form" class="flex items-center gap-2" autocomplete="off">
+        <label for="term-in" class="shrink-0"><span class="text-accent">{profile.handle}@portfolio</span><span class="text-muted">:</span><span class="text-accent-2">~</span><span class="text-muted">$</span></label>
+        <input
+          id="term-in"
+          type="text"
+          spellcheck="false"
+          autocapitalize="off"
+          maxlength="120"
+          class="min-w-0 flex-1 border-0 bg-transparent p-0 text-fg caret-accent outline-none focus:outline-none focus-visible:outline-none"
+          aria-label="Terminal command"
+        />
+      </form>
+    </div>
+  </div>
+  <div class="reveal mt-4 flex flex-wrap gap-2 text-xs" aria-label="Quick commands">
+    {['help', 'whoami', 'skills', 'projects', 'contact', 'theme amber', 'neofetch', 'clear'].map((c) => (
+      <button type="button" data-cmd={c} class="rounded border border-line px-2.5 py-1 text-muted hover:border-accent hover:text-accent">{c}</button>
+    ))}
+  </div>
+</Section>
